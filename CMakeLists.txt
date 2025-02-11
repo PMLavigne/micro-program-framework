@@ -23,6 +23,7 @@ add_library(micro-program-framework STATIC
         src/mpf/core/Subsystem.cpp
         include/mpf/core/SubsystemList.h
         src/mpf/core/SubsystemList.cpp
+        include/mpf/util/macros.h
 )
 
 target_compile_options(micro-program-framework PRIVATE
@@ -43,6 +44,7 @@ set_target_properties(micro-program-framework PROPERTIES
         C_STANDARD_REQUIRED ON
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
+        CXX_EXTENSIONS ON
 )
 
 string(TOLOWER "${MPF_LOG_LEVEL}" MPF_LOG_LEVEL_LOWER)
