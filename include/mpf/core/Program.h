@@ -8,12 +8,15 @@
 
 #include <atomic>
 
+
+#include "mpf/core/Logging.h"
 #include "mpf/core/LogSink.h"
 #include "mpf/core/SubsystemList.h"
 
 namespace mpf::core {
 
     class Program {
+        LOGGER(Program);
     public:
         Program() = default;
 
@@ -31,6 +34,8 @@ namespace mpf::core {
         virtual LogSink const * logSink() const = 0;
 
         virtual void initialize() = 0;
+
+        virtual void printStartupHeader() const = 0;
 
         virtual void setUp() = 0;
 

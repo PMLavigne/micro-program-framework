@@ -18,14 +18,21 @@ namespace mpf::core {
 
         Logger::setLogSink(logSink());
 
+        printStartupHeader();
+
+        DEBUG("Initializing {} subsystems...", m_subsystems.getRegisteredSubsystemCount());
         m_subsystems.initialize();
+        DEBUG("Subsystem initialization complete.");
 
         setUp();
 
+        DEBUG("Setting up {} subsystems...", m_subsystems.getRegisteredSubsystemCount());
         m_subsystems.setUp();
+        DEBUG("Subsystem setup complete.");
 
         beforeFirstLoop();
 
+        DEBUG("Entering main loop...");
         while (true) {
             loop();
         }
