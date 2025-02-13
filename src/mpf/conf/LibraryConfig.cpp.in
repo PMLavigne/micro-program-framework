@@ -1,0 +1,21 @@
+/**
+ * LibraryConfig.cpp.in
+ *
+ * @author Patrick Lavigne
+ */
+#include "mpf/conf/LibraryConfig.h"
+
+namespace mpf::conf {
+
+    library_config_data_t const & getLibraryConfig() {
+        constexpr static library_config_data_t instance = {
+                .LibraryName = "@PROJECT_NAME@",
+                .VersionString = "@PROJECT_VERSION@",
+                .VersionMajor = @PROJECT_VERSION_MAJOR@,
+                .VersionMinor = @PROJECT_VERSION_MINOR@,
+                .VersionPatch = @PROJECT_VERSION_PATCH@
+        };
+
+        return instance;
+    }
+}

@@ -119,8 +119,8 @@
 #endif
 
 #if MPF_LOG_VALUE >= MPF_LOG_VALUE_DEBUG
-#define DEBUG(msg, ...) mpf::core::Logger::Debug::println(_LOGGER_TAG, msg)
-#define DEBUGN(msg, ...) mpf::core::Logger::Debug::print(_LOGGER_TAG, msg)
+#define DEBUG(msg, ...) mpf::core::Logger::Debug::println(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
+#define DEBUGN(msg, ...) mpf::core::Logger::Debug::print(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
 #define DEBUGC(msg, ...) mpf::core::Logger::Debug::printlnc((msg)__VA_OPT__(, ) __VA_ARGS__)
 #define DEBUGCN(msg, ...) mpf::core::Logger::Debug::printc((msg)__VA_OPT__(, ) __VA_ARGS__)
 #define DEBUGCRLF() mpf::core::Logger::Debug::newLine()
@@ -186,7 +186,7 @@ namespace mpf::core {
 
         template <typename... ArgT>
         static void println(std::format_string<ArgT...> const& formatString, ArgT &&... args) {
-            print<ArgT...>(formatString, args...);
+            print<ArgT...>(formatString, std::forward<ArgT>(args)...);
             newLine();
         }
 
@@ -195,7 +195,7 @@ namespace mpf::core {
         template <typename... ArgT>
         static void print(std::format_string<ArgT...> const& formatString, ArgT &&... args) {
             std::format_to_n_result const result =
-                std::format_to_n(FormatBuffer.begin(), FormatBuffer.size(), formatString, args...);
+                std::format_to_n(FormatBuffer.begin(), FormatBuffer.size(), formatString, std::forward<ArgT>(args)...);
             LogWriter::print({FormatBuffer.begin(), result.out});
         }
 
@@ -223,7 +223,7 @@ namespace mpf::core {
                             ArgT &&... args) {
             if constexpr (level <= activeLevel) {
                 LogWriter::writePrefix<level>(name);
-                LogWriter::println<ArgT...>(formatString, args...);
+                LogWriter::println<ArgT...>(formatString, std::forward<ArgT>(args)...);
             }
         }
 
@@ -240,7 +240,7 @@ namespace mpf::core {
                           ArgT &&... args) {
             if constexpr (level <= activeLevel) {
                 LogWriter::writePrefix<level>(name);
-                LogWriter::print<ArgT...>(formatString, args...);
+                LogWriter::print<ArgT...>(formatString, std::forward<ArgT>(args)...);
             }
         }
 
@@ -253,7 +253,7 @@ namespace mpf::core {
         template <typename... ArgT>
         static void printlnc(std::format_string<ArgT...> const& formatString, ArgT &&... args) {
             if constexpr (level <= activeLevel) {
-                LogWriter::println<ArgT...>(formatString, args...);
+                LogWriter::println<ArgT...>(formatString, std::forward<ArgT>(args)...);
             }
         }
 
@@ -266,7 +266,7 @@ namespace mpf::core {
         template <typename... ArgT>
         static void printc(std::format_string<ArgT...> const& formatString, ArgT &&... args) {
             if constexpr (level <= activeLevel) {
-                LogWriter::print<ArgT...>(formatString, args...);
+                LogWriter::print<ArgT...>(formatString, std::forward<ArgT>(args)...);
             }
         }
 

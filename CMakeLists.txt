@@ -10,7 +10,6 @@ project(micro-program-framework
 
 set(MPF_LOG_LEVEL "Info" CACHE STRING "MPF Log Level. Can be one of: None, Error, Warn, Info, Debug, or Trace.")
 
-
 add_library(micro-program-framework STATIC
         include/mpf/core/Logging.h
         src/mpf/core/Logging.cpp
@@ -24,6 +23,9 @@ add_library(micro-program-framework STATIC
         include/mpf/core/SubsystemList.h
         src/mpf/core/SubsystemList.cpp
         include/mpf/util/macros.h
+        include/mpf/conf/BuildConfig.h
+        include/mpf/conf/LibraryConfig.h
+        include/mpf/util/FixedFormattedString.h
 )
 
 target_compile_options(micro-program-framework PRIVATE
@@ -67,4 +69,26 @@ target_compile_definitions(micro-program-framework PUBLIC
         MPF_LOG_VALUE=${MPF_LOG_VALUE}
 )
 
+message(STATUS "Generating MPF library config file")
 
+configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/mpf/conf/LibraryConfig.cpp.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/LibraryConfig.cpp"
+        @ONLY
+)
+
+add_custom_command(COMMENT "Generating MPF library build config file"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/mpf/conf/BuildConfig.cpp.in"
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/BuildConfig.cpp"
+        COMMAND ${CMAKE_COMMAND}
+        -DCONFIG_INPUT_FILE=${CMAKE_CURRENT_SOURCE_DIR}/src/mpf/conf/BuildConfig.cpp.in
+        -DCONFIG_OUTPUT_FILE=${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/BuildConfig.cpp
+        -P "${PROJECT_SOURCE_DIR}/cmake/GenerateMPFBuildConfigFile.cmake"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        VERBATIM
+)
+
+target_sources(micro-program-framework PRIVATE
+        "${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/BuildConfig.cpp"
+        "${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/LibraryConfig.cpp"
+)
