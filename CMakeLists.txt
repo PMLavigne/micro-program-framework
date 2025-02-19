@@ -26,6 +26,7 @@ add_library(micro-program-framework STATIC
         include/mpf/conf/BuildConfig.h
         include/mpf/conf/LibraryConfig.h
         include/mpf/util/FixedFormattedString.h
+        include/mpf/concepts/Types.h
 )
 
 target_compile_options(micro-program-framework PRIVATE
