@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <utility>
 
-namespace mpf::core {
+namespace mpf::types {
 
     template<class ListItemT>
     class List {

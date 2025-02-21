@@ -17,7 +17,6 @@ add_library(micro-program-framework STATIC
         src/mpf/util/StringUtil.cpp
         include/mpf/core/Program.h
         src/mpf/core/Program.cpp
-        include/mpf/core/List.h
         include/mpf/core/Subsystem.h
         src/mpf/core/Subsystem.cpp
         include/mpf/core/SubsystemList.h
@@ -25,8 +24,10 @@ add_library(micro-program-framework STATIC
         include/mpf/util/macros.h
         include/mpf/conf/BuildConfig.h
         include/mpf/conf/LibraryConfig.h
-        include/mpf/util/FixedFormattedString.h
         include/mpf/concepts/Types.h
+        include/mpf/types/List.h
+        include/mpf/types/FixedPackedString.h
+        include/mpf/types/FixedFormattedString.h
 )
 
 target_compile_options(micro-program-framework PRIVATE

@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "mpf/core/List.h"
+#include "mpf/types/List.h"
 
 namespace mpf::core {
 
     class SubsystemList;
 
-    class Subsystem : public List<Subsystem>::Item {
+    class Subsystem : public types::List<Subsystem>::Item {
 
     public:
         Subsystem(Subsystem const &) = delete;

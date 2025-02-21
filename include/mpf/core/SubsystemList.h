@@ -8,11 +8,11 @@
 
 #include <cstddef>
 
-#include "mpf/core/List.h"
+#include "mpf/types/List.h"
 #include "mpf/core/Subsystem.h"
 
 namespace mpf::core {
-    class SubsystemList final : private List<Subsystem> {
+    class SubsystemList final : private types::List<Subsystem> {
         friend class Subsystem;
 
         void registerSubsystem(Subsystem *const subsystem) {

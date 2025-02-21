@@ -10,7 +10,7 @@
 #include <format>
 #include <utility>
 
-namespace mpf::util {
+namespace mpf::types {
 
     template <size_t buffSize, typename CharT = char>
     class FixedFormattedString {
