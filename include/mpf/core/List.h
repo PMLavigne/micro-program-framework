@@ -20,13 +20,14 @@ namespace mpf::core {
         class Item {
             friend class List;
 
-            ListItemT *nextItem = nullptr;
+        public:
+            virtual ~Item() = default;
 
         protected:
             Item() noexcept = default;
 
-        public:
-            virtual ~Item() = default;
+        private:
+            ListItemT *nextItem = nullptr;
         };
 
         class Iterator {
@@ -50,12 +51,10 @@ namespace mpf::core {
 
             Iterator &operator=(Iterator &&) noexcept = default;
 
-            [[nodiscard]]
             reference operator*() const {
                 return *m_currentItem;
             }
 
-            [[nodiscard]]
             pointer operator->() const {
                 return m_currentItem;
             }
@@ -77,15 +76,14 @@ namespace mpf::core {
                 return returnValue;
             }
 
-            [[nodiscard]]
-            bool operator==(Iterator const &other) const {
+            constexpr bool operator==(Iterator const &other) const noexcept {
                 return m_currentItem == other.m_currentItem &&
                        (m_currentItemIndex == other.m_currentItemIndex || m_currentItem == nullptr);
             }
 
-            [[nodiscard]]
-            auto operator<=>(Iterator const & other) const {
-                if (operator==(other)) {
+            constexpr auto operator<=>(Iterator const & other) const noexcept  {
+                if (m_currentItem == other.m_currentItem &&
+                       (m_currentItemIndex == other.m_currentItemIndex || m_currentItem == nullptr)) {
                     return std::weak_ordering::equivalent;
                 }
                 return m_currentItemIndex <=> other.m_currentItemIndex;
@@ -117,12 +115,10 @@ namespace mpf::core {
 
             ConstIterator &operator=(ConstIterator &&) noexcept = default;
 
-            [[nodiscard]]
             reference operator*() const {
                 return *m_currentItem;
             }
 
-            [[nodiscard]]
             pointer operator->() const {
                 return m_currentItem;
             }
@@ -144,15 +140,14 @@ namespace mpf::core {
                 return returnValue;
             }
 
-            [[nodiscard]]
             bool operator==(ConstIterator const &other) const {
                 return m_currentItem == other.m_currentItem &&
                        (m_currentItemIndex == other.m_currentItemIndex || m_currentItem == nullptr);
             }
 
-            [[nodiscard]]
-            auto operator<=>(ConstIterator const & other) const {
-                if (operator==(other)) {
+            constexpr auto operator<=>(ConstIterator const & other) const {
+                if (m_currentItem == other.m_currentItem &&
+                       (m_currentItemIndex == other.m_currentItemIndex || m_currentItem == nullptr)) {
                     return std::weak_ordering::equivalent;
                 }
                 return m_currentItemIndex <=> other.m_currentItemIndex;
@@ -163,11 +158,6 @@ namespace mpf::core {
             size_t m_currentItemIndex = 0;
         };
 
-    private:
-        ListItemT *firstItem = nullptr;
-        size_t size = 0;
-
-    public:
         List() noexcept = default;
 
         List(std::initializer_list<ListItemT *> const & addToList) {
@@ -257,6 +247,10 @@ namespace mpf::core {
         ConstIterator cend() const {
             return {nullptr, getSize()};
         }
+
+    private:
+        ListItemT *firstItem = nullptr;
+        size_t size = 0;
     };
 
 }

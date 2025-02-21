@@ -78,18 +78,21 @@ configure_file(
         @ONLY
 )
 
-add_custom_command(COMMENT "Generating MPF library build config file"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/mpf/conf/BuildConfig.cpp.in"
-        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/BuildConfig.cpp"
+add_custom_target(micro-program-framework-generate-build-config
+        COMMENT "Generating MPF library build config file"
+        SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/mpf/conf/BuildConfig.cpp.in"
+        BYPRODUCTS "${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/BuildConfig.cpp"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        VERBATIM
         COMMAND ${CMAKE_COMMAND}
         -DCONFIG_INPUT_FILE=${CMAKE_CURRENT_SOURCE_DIR}/src/mpf/conf/BuildConfig.cpp.in
         -DCONFIG_OUTPUT_FILE=${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/BuildConfig.cpp
         -P "${PROJECT_SOURCE_DIR}/cmake/GenerateMPFBuildConfigFile.cmake"
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        VERBATIM
 )
 
 target_sources(micro-program-framework PRIVATE
         "${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/BuildConfig.cpp"
         "${CMAKE_CURRENT_BINARY_DIR}/generated/src/mpf/conf/LibraryConfig.cpp"
 )
+
+add_dependencies(micro-program-framework micro-program-framework-generate-build-config)
