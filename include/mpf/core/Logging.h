@@ -15,140 +15,70 @@
 #define MPF_LOG_VALUE 0
 #endif
 
-#define MPF_LOG_LEVEL_NONE None
-#define MPF_LOG_VALUE_NONE 0
-#define MPF_LOG_LEVEL_ERROR Error
-#define MPF_LOG_VALUE_ERROR 1
-#define MPF_LOG_LEVEL_WARN Warn
-#define MPF_LOG_VALUE_WARN 2
-#define MPF_LOG_LEVEL_INFO Info
-#define MPF_LOG_VALUE_INFO 3
-#define MPF_LOG_LEVEL_DEBUG Debug
-#define MPF_LOG_VALUE_DEBUG 4
-#define MPF_LOG_LEVEL_TRACE Trace
-#define MPF_LOG_VALUE_TRACE 5
-
-#if MPF_LOG_VALUE == MPF_LOG_VALUE_NONE
-#define MPF_LOG_LEVEL MPF_LOG_LEVEL_NONE
-#elif MPF_LOG_VALUE == MPF_LOG_VALUE_ERROR
-#define MPF_LOG_LEVEL MPF_LOG_LEVEL_ERROR
-#define MPF_DEBUG_LOGGING_ENABLED
-#elif MPF_LOG_VALUE == MPF_LOG_VALUE_WARN
-#define MPF_LOG_LEVEL MPF_LOG_LEVEL_WARN
-#define MPF_DEBUG_LOGGING_ENABLED
-#elif MPF_LOG_VALUE == MPF_LOG_VALUE_INFO
-#define MPF_LOG_LEVEL MPF_LOG_LEVEL_INFO
-#define MPF_DEBUG_LOGGING_ENABLED
-#elif MPF_LOG_VALUE == MPF_LOG_VALUE_DEBUG
-#define MPF_LOG_LEVEL MPF_LOG_LEVEL_DEBUG
-#define MPF_DEBUG_LOGGING_ENABLED
-#elif MPF_LOG_VALUE == MPF_LOG_VALUE_TRACE
-#define MPF_LOG_LEVEL MPF_LOG_LEVEL_TRACE
-#define MPF_DEBUG_LOGGING_ENABLED
-#else
-#define MPF_LOG_LEVEL MPF_LOG_LEVEL_NONE
-#endif
-
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_ERROR
-#define MPF_LOG_LEVEL_ERROR_ENABLED
-#endif
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_WARN
-#define MPF_LOG_LEVEL_WARN_ENABLED
-#endif
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_INFO
-#define MPF_LOG_LEVEL_INFO_ENABLED
-#endif
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_DEBUG
-#define MPF_LOG_LEVEL_DEBUG_ENABLED
-#endif
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_TRACE
-#define MPF_LOG_LEVEL_TRACE_ENABLED
-#endif
-
-#define LOGGER(tag)                                                                                                    \
-    static inline std::string_view _LOGGER_TAG { #tag }
+#define LOGGER(tag) static constexpr std::string_view _LOGGER_TAG { #tag }
 
 #define MPF_DO_NOTHING ((void)0)
 
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_ERROR
-#define ERROR(msg, ...) mpf::core::Logger::Error::println(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define ERRORN(msg, ...) mpf::core::Logger::Error::print(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define ERRORC(msg, ...) mpf::core::Logger::Error::printlnc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define ERRORCN(msg, ...) mpf::core::Logger::Error::printc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define ERRORCRLF() mpf::core::Logger::Error::newLine()
-#define ERRORF() mpf::core::Logger::Error::flush()
-#else
-#define ERROR(msg, ...) MPF_DO_NOTHING
-#define ERRORN(msg, ...) MPF_DO_NOTHING
-#define ERRORC(msg, ...) MPF_DO_NOTHING
-#define ERRORCN(msg, ...) MPF_DO_NOTHING
-#define ERRORCRLF() MPF_DO_NOTHING
-#define ERRORF() MPF_DO_NOTHING
-#endif
+#define MPF_LOG(level, msg, ...) if constexpr (mpf::core::Logger::level ## Enabled) \
+    mpf::core::Logger::level::println(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__); \
+    else MPF_DO_NOTHING
 
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_WARN
-#define WARN(msg, ...) mpf::core::Logger::Warn::println(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define WARNN(msg, ...) mpf::core::Logger::Warn::print(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define WARNC(msg, ...) mpf::core::Logger::Warn::printlnc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define WARNCN(msg, ...) mpf::core::Logger::Warn::printc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define WARNCRLF() mpf::core::Logger::Warn::newLine()
-#define WARNF() mpf::core::Logger::Warn::flush()
-#else
-#define WARN(msg, ...) MPF_DO_NOTHING
-#define WARNN(msg, ...) MPF_DO_NOTHING
-#define WARNC(msg, ...) MPF_DO_NOTHING
-#define WARNCN(msg, ...) MPF_DO_NOTHING
-#define WARNCRLF() MPF_DO_NOTHING
-#define WARNF() MPF_DO_NOTHING
-#endif
+#define MPF_LOGN(level, msg, ...) if constexpr (mpf::core::Logger::level ## Enabled) \
+    mpf::core::Logger::level::print(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__); \
+    else MPF_DO_NOTHING
 
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_INFO
-#define INFO(msg, ...) mpf::core::Logger::Info::println(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define INFON(msg, ...) mpf::core::Logger::Info::print(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define INFOC(msg, ...) mpf::core::Logger::Info::printlnc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define INFOCN(msg, ...) mpf::core::Logger::Info::printc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define INFOCRLF() mpf::core::Logger::Info::newLine()
-#define INFOF() mpf::core::Logger::Info::flush()
-#else
-#define INFO(msg, ...) MPF_DO_NOTHING
-#define INFON(msg, ...) MPF_DO_NOTHING
-#define INFOC(msg, ...) MPF_DO_NOTHING
-#define INFOCN(msg, ...) MPF_DO_NOTHING
-#define INFOCRLF() MPF_DO_NOTHING
-#define INFOF() MPF_DO_NOTHING
-#endif
+#define MPF_LOGC(level, msg, ...) if constexpr (mpf::core::Logger::level ## Enabled) \
+    mpf::core::Logger::level::printlnc((msg)__VA_OPT__(, ) __VA_ARGS__); \
+    else MPF_DO_NOTHING
 
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_DEBUG
-#define DEBUG(msg, ...) mpf::core::Logger::Debug::println(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define DEBUGN(msg, ...) mpf::core::Logger::Debug::print(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define DEBUGC(msg, ...) mpf::core::Logger::Debug::printlnc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define DEBUGCN(msg, ...) mpf::core::Logger::Debug::printc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define DEBUGCRLF() mpf::core::Logger::Debug::newLine()
-#define DEBUGF() mpf::core::Logger::Debug::flush()
-#else
-#define DEBUG(msg, ...) MPF_DO_NOTHING
-#define DEBUGN(msg, ...) MPF_DO_NOTHING
-#define DEBUGC(msg, ...) MPF_DO_NOTHING
-#define DEBUGCN(msg, ...) MPF_DO_NOTHING
-#define DEBUGCRLF() MPF_DO_NOTHING
-#define DEBUGF() MPF_DO_NOTHING
-#endif
+#define MPF_LOGCN(level, msg, ...) if constexpr (mpf::core::Logger::level ## Enabled) \
+    mpf::core::Logger::level::printc((msg)__VA_OPT__(, ) __VA_ARGS__); \
+    else MPF_DO_NOTHING
 
-#if MPF_LOG_VALUE >= MPF_LOG_VALUE_TRACE
-#define TRACE(msg, ...) mpf::core::Logger::Trace::println(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define TRACEN(msg, ...) mpf::core::Logger::Trace::print(_LOGGER_TAG, (msg)__VA_OPT__(, ) __VA_ARGS__)
-#define TRACEC(msg, ...) mpf::core::Logger::Trace::printlnc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define TRACECN(msg, ...) mpf::core::Logger::Trace::printc((msg)__VA_OPT__(, ) __VA_ARGS__)
-#define TRACECRLF() mpf::core::Logger::Trace::newLine()
-#define TRACEF() mpf::core::Logger::Trace::flush()
-#else
-#define TRACE(msg, ...) MPF_DO_NOTHING
-#define TRACEN(msg, ...) MPF_DO_NOTHING
-#define TRACEC(msg, ...) MPF_DO_NOTHING
-#define TRACECN(msg, ...) MPF_DO_NOTHING
-#define TRACECRLF() MPF_DO_NOTHING
-#define TRACEF() MPF_DO_NOTHING
-#endif
+#define MPF_LOGCRLF(level) if constexpr (mpf::core::Logger::level ## Enabled) \
+    mpf::core::Logger::level::newLine(); \
+    else MPF_DO_NOTHING
+
+#define MPF_LOGF(level) if constexpr (mpf::core::Logger::level ## Enabled) \
+    mpf::core::Logger::level::flush(); \
+    else MPF_DO_NOTHING
+
+#define ERROR(msg, ...) MPF_LOG(Error, msg __VA_OPT__(, ) __VA_ARGS__)
+#define ERRORN(msg, ...) MPF_LOGN(Error, msg __VA_OPT__(, ) __VA_ARGS__)
+#define ERRORC(msg, ...) MPF_LOGC(Error, msg __VA_OPT__(, ) __VA_ARGS__)
+#define ERRORCN(msg, ...) MPF_LOGCN(Error, msg __VA_OPT__(, ) __VA_ARGS__)
+#define ERRORCRLF() MPF_LOGCRLF(Error)
+#define ERRORF() MPF_LOGF(Error)
+
+#define WARN(msg, ...) MPF_LOG(Warn, msg __VA_OPT__(, ) __VA_ARGS__)
+#define WARNN(msg, ...) MPF_LOGN(Warn, msg __VA_OPT__(, ) __VA_ARGS__)
+#define WARNC(msg, ...) MPF_LOGC(Warn, msg __VA_OPT__(, ) __VA_ARGS__)
+#define WARNCN(msg, ...) MPF_LOGCN(Warn, msg __VA_OPT__(, ) __VA_ARGS__)
+#define WARNCRLF() MPF_LOGCRLF(Warn)
+#define WARNF() MPF_LOGF(Warn)
+
+#define INFO(msg, ...) MPF_LOG(Info, msg __VA_OPT__(, ) __VA_ARGS__)
+#define INFON(msg, ...) MPF_LOGN(Info, msg __VA_OPT__(, ) __VA_ARGS__)
+#define INFOC(msg, ...) MPF_LOGC(Info, msg __VA_OPT__(, ) __VA_ARGS__)
+#define INFOCN(msg, ...) MPF_LOGCN(Info, msg __VA_OPT__(, ) __VA_ARGS__)
+#define INFOCRLF() MPF_LOGCRLF(Info)
+#define INFOF() MPF_LOGF(Info)
+
+#define DEBUG(msg, ...) MPF_LOG(Debug, msg __VA_OPT__(, ) __VA_ARGS__)
+#define DEBUGN(msg, ...) MPF_LOGN(Debug, msg __VA_OPT__(, ) __VA_ARGS__)
+#define DEBUGC(msg, ...) MPF_LOGC(Debug, msg __VA_OPT__(, ) __VA_ARGS__)
+#define DEBUGCN(msg, ...) MPF_LOGCN(Debug, msg __VA_OPT__(, ) __VA_ARGS__)
+#define DEBUGCRLF() MPF_LOGCRLF(Debug)
+#define DEBUGF() MPF_LOGF(Debug)
+
+#define TRACE(msg, ...) MPF_LOG(Trace, msg __VA_OPT__(, ) __VA_ARGS__)
+#define TRACEN(msg, ...) MPF_LOGN(Trace, msg __VA_OPT__(, ) __VA_ARGS__)
+#define TRACEC(msg, ...) MPF_LOGC(Trace, msg __VA_OPT__(, ) __VA_ARGS__)
+#define TRACECN(msg, ...) MPF_LOGCN(Trace, msg __VA_OPT__(, ) __VA_ARGS__)
+#define TRACECRLF() MPF_LOGCRLF(Trace)
+#define TRACEF() MPF_LOGF(Trace)
+
+
 
 namespace mpf::core {
 
@@ -182,18 +112,18 @@ namespace mpf::core {
             writeTag(name);
         }
 
-        static void println(std::string_view const & printStr);
+        static void println(std::string_view const& printStr);
 
         template <typename... ArgT>
-        static void println(std::format_string<ArgT...> const& formatString, ArgT &&... args) {
+        static void println(std::format_string<ArgT...> const& formatString, ArgT&&... args) {
             print<ArgT...>(formatString, std::forward<ArgT>(args)...);
             newLine();
         }
 
-        static void print(std::string_view const & printStr);
+        static void print(std::string_view const& printStr);
 
         template <typename... ArgT>
-        static void print(std::format_string<ArgT...> const& formatString, ArgT &&... args) {
+        static void print(std::format_string<ArgT...> const& formatString, ArgT&&... args) {
             std::format_to_n_result const result =
                 std::format_to_n(FormatBuffer.begin(), FormatBuffer.size(), formatString, std::forward<ArgT>(args)...);
             LogWriter::print({FormatBuffer.begin(), result.out});
@@ -220,7 +150,7 @@ namespace mpf::core {
         template <typename... ArgT>
         static void println(std::string_view const& name,
                             std::format_string<ArgT...> const& formatString,
-                            ArgT &&... args) {
+                            ArgT&&... args) {
             if constexpr (level <= activeLevel) {
                 LogWriter::writePrefix<level>(name);
                 LogWriter::println<ArgT...>(formatString, std::forward<ArgT>(args)...);
@@ -237,34 +167,34 @@ namespace mpf::core {
         template <typename... ArgT>
         static void print(std::string_view const& name,
                           std::format_string<ArgT...> const& formatString,
-                          ArgT &&... args) {
+                          ArgT&&... args) {
             if constexpr (level <= activeLevel) {
                 LogWriter::writePrefix<level>(name);
                 LogWriter::print<ArgT...>(formatString, std::forward<ArgT>(args)...);
             }
         }
 
-        static void printlnc(std::string_view const & message) {
+        static void printlnc(std::string_view const& message) {
             if constexpr (level <= activeLevel) {
                 LogWriter::println(message);
             }
         }
 
         template <typename... ArgT>
-        static void printlnc(std::format_string<ArgT...> const& formatString, ArgT &&... args) {
+        static void printlnc(std::format_string<ArgT...> const& formatString, ArgT&&... args) {
             if constexpr (level <= activeLevel) {
                 LogWriter::println<ArgT...>(formatString, std::forward<ArgT>(args)...);
             }
         }
 
-        static void printc(std::string_view const & message) {
+        static void printc(std::string_view const& message) {
             if constexpr (level <= activeLevel) {
                 LogWriter::print(message);
             }
         }
 
         template <typename... ArgT>
-        static void printc(std::format_string<ArgT...> const& formatString, ArgT &&... args) {
+        static void printc(std::format_string<ArgT...> const& formatString, ArgT&&... args) {
             if constexpr (level <= activeLevel) {
                 LogWriter::print<ArgT...>(formatString, std::forward<ArgT>(args)...);
             }
@@ -284,10 +214,19 @@ namespace mpf::core {
     };
 
     class Logger {
-        static constexpr auto ActiveLevel = LogLevel::MPF_LOG_LEVEL;
-
-        static inline LogSink const * m_logSink = nullptr;
     public:
+        static constexpr auto ActiveLevel = static_cast<LogLevel>(MPF_LOG_VALUE);
+
+        static constexpr bool ErrorEnabled = ActiveLevel >= LogLevel::Error;
+
+        static constexpr bool WarnEnabled = ActiveLevel >= LogLevel::Warn;
+
+        static constexpr bool InfoEnabled = ActiveLevel >= LogLevel::Info;
+
+        static constexpr bool DebugEnabled = ActiveLevel >= LogLevel::Debug;
+
+        static constexpr bool TraceEnabled = ActiveLevel >= LogLevel::Trace;
+
         using Error = LogLevelLogger<LogLevel::Error, ActiveLevel>;
 
         using Warn = LogLevelLogger<LogLevel::Warn, ActiveLevel>;
@@ -298,13 +237,16 @@ namespace mpf::core {
 
         using Trace = LogLevelLogger<LogLevel::Trace, ActiveLevel>;
 
-        static void setLogSink(LogSink const * logSink);
+        static void setLogSink(LogSink const* logSink);
 
-        static LogSink const * getLogSink();
+        static LogSink const* getLogSink();
 
         Logger() noexcept = delete;
 
         ~Logger() = delete;
+
+    private:
+        static inline LogSink const* m_logSink = nullptr;
     };
 
 } // namespace mpf::core

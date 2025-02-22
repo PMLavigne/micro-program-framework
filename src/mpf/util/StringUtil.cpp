@@ -35,7 +35,7 @@ namespace mpf::util {
                 addTooLongStringSuffix(out);
                 return resultLength;
             }
-            out[resultLength] = HexChars[(currentByte & 0x0FU)];
+            out[resultLength] = HexChars[currentByte & 0x0FU];
             ++resultLength;
             if (resultLength >= out.size()) {
                 addTooLongStringSuffix(out);
@@ -168,14 +168,6 @@ namespace mpf::util {
             return;
         }
         out[15] = HexChars[value & 0x000000000000000FULL];
-    }
-
-    void StringUtil::padEnd(char* buff, char const padChar, uint8_t const count) {
-        size_t const length = strlen(buff);
-        for (uint8_t iter = 0; iter < count; ++iter) {
-            buff[length + iter] = padChar;
-        }
-        buff[length + count] = '\0';
     }
 
     size_t StringUtil::copyToFixedLengthBuffer(std::string_view const& stringView,

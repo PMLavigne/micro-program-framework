@@ -112,8 +112,6 @@ namespace mpf::util {
             }
         }
 
-        static void padEnd(char *buff, char padChar, uint8_t count);
-
         static size_t copyToFixedLengthBuffer(std::string_view const & stringView, char * dest, size_t destLength);
 
         StringUtil() = delete;

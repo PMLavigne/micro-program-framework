@@ -20,20 +20,20 @@
 
 #if MPF_HAS_ATTRIBUTE(gnu::packed)
 #define MPF_ATTR_PACKED gnu::packed
-#define MPF_HAS_ATTR_PACKED 1
+#define MPF_HAS_ATTR_PACKED
 #elif MPF_HAS_ATTRIBUTE(packed)
 #define MPF_ATTR_PACKED packed
-#define MPF_HAS_ATTR_PACKED 1
+#define MPF_HAS_ATTR_PACKED
 #else
 #define MPF_ATTR_PACKED
 #endif
 
 #if MPF_HAS_ATTRIBUTE(gnu::nonstring)
 #define MPF_ATTR_NONSTRING gnu::nonstring
-#define MPF_HAS_ATTR_NONSTRING 1
+#define MPF_HAS_ATTR_NONSTRING
 #elif MPF_HAS_ATTRIBUTE(nonstring)
 #define MPF_ATTR_NONSTRING nonstring
-#define MPF_HAS_ATTR_NONSTRING 1
+#define MPF_HAS_ATTR_NONSTRING
 #else
 #define MPF_ATTR_NONSTRING
 #endif
