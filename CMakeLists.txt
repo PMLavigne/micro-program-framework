@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
+cmake_policy(PUSH)
 # Enable setting VERSION in project() call
 cmake_policy(SET CMP0048 NEW)
 
@@ -97,3 +98,5 @@ target_sources(micro-program-framework PRIVATE
 )
 
 add_dependencies(micro-program-framework micro-program-framework-generate-build-config)
+
+cmake_policy(POP)
